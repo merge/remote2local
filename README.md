@@ -5,6 +5,9 @@ This is an rsync-based backup solution for a large, remote directory tree.
 to all of `--link-dest`. `--delete-delay` or `--delete-after` is needed when
 using `--fuzzy`.
 
+## how to use
+`./backup.sh -c <configfile>`
+
 ## TODO
 * support resume
 * add script to duplicate locally
