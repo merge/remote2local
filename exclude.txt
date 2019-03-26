@@ -1,0 +1,7 @@
+.Private
+.ecryptfs
+.cache
+.local/share
+.nobackup
+.mozilla
+tor-browser_en-US
