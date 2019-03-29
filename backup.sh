@@ -1,12 +1,12 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-3.0+
 # Copyright (C) 2019, Martin Kepplinger <martink@posteo.de>
+version="0.1"
 
-# TODO allow resume instead of reset
+# TODO allow resume instead of restart
 
 have_config_file=0
 success=0
-source ${CONFIG_FILE}
 
 args=$(getopt -o c: -- "$@")
 if [ $? -ne 0 ] ; then
@@ -33,6 +33,8 @@ do
         shift
 done
 
+echo "======= remote2local version $version - happy backuping ======"
+
 if [ "$have_config_file" -gt 0 ] ; then
 	echo "Using configuration ${CONFIG_FILE}"
 else
@@ -44,6 +46,7 @@ if [ ! -f ${CONFIG_FILE} ]; then
 	echo "config file not found!"
 	exit 0
 fi
+source ${CONFIG_FILE}
 
 if [ ! -f ${EXCLUDE_LIST} ]; then
 	echo "exclude file not found!"
@@ -76,6 +79,7 @@ function trap_exit()
 }
 trap "trap_exit" EXIT
 
+echo "-------------- start rsync from ${source_ssh} ----------------"
 rsync -aR \
  --delete-after \
  --fuzzy \
@@ -92,4 +96,4 @@ if [ "$?" -eq "0" ] ; then
 	ln -nsf ${archive_name}-${date_started} ${archive_name}-last
 	echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
 fi
-date
+echo "-------- stopping $(date) ----------"
