@@ -1,0 +1,7 @@
+remote2local 0.1 - unreleased
+==================================
+This is an initial release of remote2local. Some features are
+* incremental rsync backup using hardlinks at the destination
+* reliable transfer of a large, changing, remote ssh source (like a home directory)
+* clean exit in case of failure, during transfer or by the user
+* robust error handling
