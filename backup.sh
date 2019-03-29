@@ -7,36 +7,44 @@ version="0.1"
 
 have_config_file=0
 success=0
+quiet=0
 
-args=$(getopt -o c: -- "$@")
+args=$(getopt -o c:q -- "$@")
 if [ $? -ne 0 ] ; then
-        exit 1
+	exit 1
 fi
 eval set -- "$args"
 while [ $# -gt 0 ]
 do
         case "$1" in
         -c)
-                CONFIG_FILE=$2
-                have_config_file=1
-                shift
-                ;;
+		CONFIG_FILE=$2
+		have_config_file=1
+		shift
+		;;
+	-q)
+		quiet=1
+		;;
         --)
-                shift
+		shift
                 break
-                ;;
-        *)
-                echo "Invalid option: $1"
-                exit 1
-                ;;
-        esac
-        shift
+		;;
+	*)
+		echo "Invalid option: $1"
+		exit 1
+		;;
+	esac
+	shift
 done
 
-echo "======= remote2local version $version - happy backuping ======"
+if [ ! $quiet -gt 0 ] ; then
+	echo "======= remote2local version $version - happy backuping ======"
+fi
 
 if [ "$have_config_file" -gt 0 ] ; then
-	echo "Using configuration ${CONFIG_FILE}"
+	if [ ! $quiet -gt 0 ] ; then
+		echo "Using configuration ${CONFIG_FILE}"
+	fi
 else
 	echo "Please add -c <configfile>"
 	exit 1
@@ -79,12 +87,22 @@ function trap_exit()
 }
 trap "trap_exit" EXIT
 
-echo "-------------- start rsync from ${source_ssh} ----------------"
+if [ ! $quiet -gt 0 ] ; then
+	echo "-------------- start rsync from ${source_ssh} ----------------"
+fi
+
+rsync_verbose=""
+if [ $quiet -gt 0 ] ; then
+	rsync_verbose="--human-readable --info=progress2"
+else
+	rsync_verbose="--verbose --human-readable --info=progress2"
+fi
+
 rsync -aR \
  --delete-after \
  --fuzzy \
  --fuzzy \
- --verbose --human-readable --info=progress2 \
+ $rsync_verbose \
  --compress --compress-level=9 \
  --exclude-from="${EXCLUDE_LIST}" \
  --ignore-missing-args \
@@ -96,4 +114,6 @@ if [ "$?" -eq "0" ] ; then
 	ln -nsf ${archive_name}-${date_started} ${archive_name}-last
 	echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
 fi
-echo "-------- stopping $(date) ----------"
+if [ ! $quiet -gt 0 ] ; then
+	echo "-------- stopping $(date) ----------"
+fi
