@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0+
 # Copyright (C) 2019, Martin Kepplinger <martink@posteo.de>
 
-# TODO resume instead of reset
+# TODO allow resume instead of reset
 
 have_config_file=0
+success=0
+source ${CONFIG_FILE}
 
 args=$(getopt -o c: -- "$@")
 if [ $? -ne 0 ] ; then
@@ -43,7 +45,11 @@ if [ ! -f ${CONFIG_FILE} ]; then
 	exit 0
 fi
 
-source ${CONFIG_FILE}
+if [ ! -f ${EXCLUDE_LIST} ]; then
+	echo "exclude file not found!"
+	exit 0
+fi
+
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -51,6 +57,8 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 date_started=$(date +%Y-%m-%d)
+# allow overwriting date_started
+source ${CONFIG_FILE}
 
 if [ -d "${dest_dir}" ] ; then
 	cd ${dest_dir}
@@ -61,8 +69,10 @@ fi
 
 function trap_exit()
 {
-	echo -e "${RED}Error${NC} while running rsync. resetting back..."
-	rm -rf ${archive_name}-${date_started}
+	if [ ! $success -gt 0 ] ; then
+		echo -e "${RED}Error${NC} while running rsync. resetting back..."
+		rm -rf ${archive_name}-${date_started}
+	fi
 }
 trap "trap_exit" EXIT
 
@@ -76,12 +86,10 @@ rsync -aR \
  --ignore-missing-args \
  -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
  --link-dest="${dest_dir}/${archive_name}-last"
-
-date
 if [ "$?" -eq "0" ] ; then
+	success=1
 	sync
 	ln -nsf ${archive_name}-${date_started} ${archive_name}-last
 	echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
-else
-	trap_exit
 fi
+date
