@@ -4,12 +4,14 @@
 version="0.1"
 
 # TODO allow resume instead of restart
+# TODO detect backup in progress, and exit early
 
 have_config_file=0
 success=0
 quiet=0
+tries=1
 
-args=$(getopt -o c:q -- "$@")
+args=$(getopt -o c:qr: -- "$@")
 if [ $? -ne 0 ] ; then
 	exit 1
 fi
@@ -24,6 +26,10 @@ do
 		;;
 	-q)
 		quiet=1
+		;;
+	-r)
+		tries=$2
+		shift
 		;;
         --)
 		shift
@@ -78,6 +84,11 @@ else
 	exit 0
 fi
 
+function user_cancel() {
+	exit 0
+}
+trap "user_cancel" SIGINT
+
 function trap_exit()
 {
 	if [ ! $success -gt 0 ] ; then
@@ -98,22 +109,36 @@ else
 	rsync_verbose="--verbose --human-readable --info=progress2"
 fi
 
-rsync -aR \
- --delete-after \
- --fuzzy \
- --fuzzy \
- $rsync_verbose \
- --compress --compress-level=9 \
- --exclude-from="${EXCLUDE_LIST}" \
- --ignore-missing-args \
- -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
- --link-dest="${dest_dir}/${archive_name}-last"
-if [ "$?" -eq "0" ] ; then
-	success=1
-	sync
-	ln -nsf ${archive_name}-${date_started} ${archive_name}-last
-	echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
-fi
+while [ $tries -ne 0 ] ; do
+	tries=$(($tries-1))
+
+	# TODO if quiet, all and errors to dev/null, printf "."
+
+	rsync -aR \
+	 --delete-after \
+	 --fuzzy \
+	 --fuzzy \
+	 $rsync_verbose \
+	 --compress --compress-level=9 \
+	 --exclude-from="${EXCLUDE_LIST}" \
+	 --ignore-missing-args \
+	 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
+	 --link-dest="${dest_dir}/${archive_name}-last"
+	if [ "$?" -eq "0" ] ; then
+		success=1
+		tries=0
+		sync
+		ln -nsf ${archive_name}-${date_started} ${archive_name}-last
+		echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
+	else
+		rm -rf ${archive_name}-${date_started}
+	fi
+
+	if [ ! $quiet -gt 0 ] ; then
+		echo "$tries retries"
+	fi
+	sleep 30
+done
 if [ ! $quiet -gt 0 ] ; then
 	echo "-------- stopping $(date) ----------"
 fi
