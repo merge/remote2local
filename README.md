@@ -8,8 +8,11 @@ using `--fuzzy`.
 ## how to use
 `./backup.sh -c <configfile>`
 
+Use `-q` for a quiet run, only showing the total progress.
+
 ## TODO
 * support resume
+* support retry until reachable
 * add script to duplicate locally
 
 ## offtopic
