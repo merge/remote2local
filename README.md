@@ -10,11 +10,6 @@ using `--fuzzy`.
 
 Use `-q` for a quiet run, only showing the total progress.
 
-## TODO
-* support resume
-* support retry until reachable
-* add script to duplicate locally
-
 ## offtopic
 ### ssh server behind any NAT
 #### tor hidded service at source
