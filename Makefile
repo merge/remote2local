@@ -1,3 +1,4 @@
+.DEFAULT_GOAL := all
 NAME=remote2local
 VERSION=0.1
 
