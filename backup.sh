@@ -146,6 +146,7 @@ while [ $tries -ne 0 ] ; do
 
 	# TODO logfile in /tmp instead of /dev/null
 
+	date_started=$(date +%Y-%m-%d)
 	if [ ! $quiet -gt 0 ] ; then
 		rsync -aR \
 		 --delete-after \
