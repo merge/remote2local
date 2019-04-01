@@ -112,18 +112,31 @@ fi
 while [ $tries -ne 0 ] ; do
 	tries=$(($tries-1))
 
-	# TODO if quiet, all and errors to dev/null, printf "."
+	# TODO logfile in /tmp instead of /dev/null
 
-	rsync -aR \
-	 --delete-after \
-	 --fuzzy \
-	 --fuzzy \
-	 $rsync_verbose \
-	 --compress --compress-level=9 \
-	 --exclude-from="${EXCLUDE_LIST}" \
-	 --ignore-missing-args \
-	 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
-	 --link-dest="${dest_dir}/${archive_name}-last"
+	if [ ! $quiet -gt 0 ] ; then
+		rsync -aR \
+		 --delete-after \
+		 --fuzzy \
+		 --fuzzy \
+		 $rsync_verbose \
+		 --compress --compress-level=9 \
+		 --exclude-from="${EXCLUDE_LIST}" \
+		 --ignore-missing-args \
+		 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
+		 --link-dest="${dest_dir}/${archive_name}-last"
+	else
+		rsync -aR \
+		 --delete-after \
+		 --fuzzy \
+		 --fuzzy \
+		 $rsync_verbose \
+		 --compress --compress-level=9 \
+		 --exclude-from="${EXCLUDE_LIST}" \
+		 --ignore-missing-args \
+		 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
+		 --link-dest="${dest_dir}/${archive_name}-last" &> /dev/null
+	fi
 	if [ "$?" -eq "0" ] ; then
 		success=1
 		tries=0
@@ -136,6 +149,8 @@ while [ $tries -ne 0 ] ; do
 
 	if [ ! $quiet -gt 0 ] ; then
 		echo "$tries retries"
+	else
+		printf "."
 	fi
 	sleep 60
 done
