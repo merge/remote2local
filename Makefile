@@ -5,7 +5,7 @@ VERSION=0.1
 DIRS=etc lib bin sbin share
 INSTALL_DIRS=`find $(DIRS) -type d 2>/dev/null`
 INSTALL_FILES=`find $(DIRS) -type f 2>/dev/null`
-DOC_FILES=*.md *.txt
+DOC_FILES=*.md
 
 PKG_DIR=pkg
 PKG_NAME=$(NAME)-$(VERSION)
