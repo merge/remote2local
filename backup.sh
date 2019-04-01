@@ -91,6 +91,10 @@ trap "user_cancel" SIGINT
 
 function trap_exit()
 {
+	if [ ! $quiet -gt 0 ] ; then
+		echo "-------- stopping $(date) ----------"
+	fi
+
 	if [ ! $success -gt 0 ] ; then
 		echo -e "${RED}Error${NC} while running rsync. resetting back..."
 		rm -rf ${archive_name}-${date_started}
@@ -135,7 +139,7 @@ while [ $tries -ne 0 ] ; do
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
 		 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
-		 --link-dest="${dest_dir}/${archive_name}-last" &> /dev/null
+		 --link-dest="${dest_dir}/${archive_name}-last" 2> /dev/null
 	fi
 	if [ "$?" -eq "0" ] ; then
 		success=1
@@ -145,15 +149,11 @@ while [ $tries -ne 0 ] ; do
 		echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
 	else
 		rm -rf ${archive_name}-${date_started}
+		if [ ! $quiet -gt 0 ] ; then
+			echo "$tries retries"
+		else
+			printf "."
+		fi
+		sleep 60
 	fi
-
-	if [ ! $quiet -gt 0 ] ; then
-		echo "$tries retries"
-	else
-		printf "."
-	fi
-	sleep 60
 done
-if [ ! $quiet -gt 0 ] ; then
-	echo "-------- stopping $(date) ----------"
-fi
