@@ -11,7 +11,17 @@ success=0
 quiet=0
 tries=1
 
-args=$(getopt -o c:qr: -- "$@")
+function usage() {
+	echo "remote2local v$version"
+	echo ""
+	echo "$0 -c <configfile> [-q] [-r <nr_of_retries>]"
+	echo "	-c	path to config file, see example for the settings"
+	echo "	-q	quiet. print less"
+	echo "	-r	number of retries until remote is reachable. 0 for inifitely"
+	echo "	-h	print this help text"
+}
+
+args=$(getopt -o c:qr:h -- "$@")
 if [ $? -ne 0 ] ; then
 	exit 1
 fi
@@ -31,12 +41,17 @@ do
 		tries=$2
 		shift
 		;;
+	-h)
+		usage
+		exit 0
+		;;
         --)
 		shift
                 break
 		;;
 	*)
 		echo "Invalid option: $1"
+		usage
 		exit 1
 		;;
 	esac
