@@ -113,8 +113,21 @@ else
 	rsync_verbose="--verbose --human-readable --info=progress2"
 fi
 
+wait_infinitely=0
+if [ $tries -eq 0 ] ; then
+	wait_infinitely=1
+	tries=1
+	if [ ! $quiet -gt 0 ] ; then
+		echo "waiting infinitely until remote is reachable"
+	fi
+fi
+
 while [ $tries -ne 0 ] ; do
 	tries=$(($tries-1))
+
+	if [ $wait_infinitely -gt 0 ] ; then
+		tries=1
+	fi
 
 	# TODO logfile in /tmp instead of /dev/null
 
