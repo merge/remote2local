@@ -137,7 +137,7 @@ while [ $tries -ne 0 ] ; do
 	if [ ! $quiet -gt 0 ] ; then
 		echo "$tries retries"
 	fi
-	sleep 30
+	sleep 60
 done
 if [ ! $quiet -gt 0 ] ; then
 	echo "-------- stopping $(date) ----------"
