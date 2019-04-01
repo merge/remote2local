@@ -29,7 +29,7 @@ sign: $(SIG)
 	echo "signing not yet implemented"
 
 clean:
-	rm -f $(PKG) $(SIG)
+	rm -rf $(PKG_DIR)
 
 all: $(PKG) $(SIG)
 
