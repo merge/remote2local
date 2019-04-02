@@ -6,9 +6,12 @@ to all of `--link-dest`. `--delete-delay` or `--delete-after` is needed when
 using `--fuzzy`.
 
 ## how to use
-`./backup.sh -c <configfile>`
 
-Use `-q` for a quiet run, only showing the total progress.
+	remote2local.sh -c <configfile> [-q] [-r <nr_of_retries>]
+		-c	path to config file, see example for the settings
+		-q	quiet. print less
+		-r	number of retries until remote is reachable. 0 for inifitely
+		-h	print this help text
 
 ## offtopic
 ### ssh server behind any NAT
