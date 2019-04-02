@@ -65,7 +65,7 @@ fi
 
 if [ ! -f ${CONFIG_FILE} ]; then
 	echo "config file not found: ${CONFIG_FILE}"
-	exit 0
+	exit 1
 fi
 
 
@@ -78,7 +78,7 @@ fi
 
 if [ ! -f ${EXCLUDE_LIST} ]; then
 	echo "exclude file not found: ${EXCLUDE_LIST}"
-	exit 0
+	exit 1
 fi
 
 
@@ -91,7 +91,17 @@ if [ -d "${dest_dir}" ] ; then
 	cd ${dest_dir}
 else
 	echo "destination directory not found: ${dest_dir}"
-	exit 0
+	exit 1
+fi
+
+if [ -z "${archive_name}" ] ; then
+	echo "no archive name for local destination"
+	exit 1
+fi
+
+if [ -z "${source_dir}" ] ; then
+	echo "no source directory for remote source"
+	exit 1
 fi
 
 function user_cancel() {
