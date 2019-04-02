@@ -58,24 +58,23 @@ do
 	shift
 done
 
+if [ "$have_config_file" -eq 0 ] ; then
+	CONFIG_FILE="/usr/local/etc/remote2local.conf"
+	read -r -p "continue with ${CONFIG_FILE}?"
+fi
+
+if [ ! -f ${CONFIG_FILE} ]; then
+	echo "config file ${CONFIG_FILE} not found!"
+	exit 0
+fi
+
+
+date_started=$(date +%Y-%m-%d)
+source ${CONFIG_FILE}
 if [ ! $quiet -gt 0 ] ; then
 	echo "======= remote2local version $version - happy backuping ======"
 fi
 
-if [ "$have_config_file" -gt 0 ] ; then
-	if [ ! $quiet -gt 0 ] ; then
-		echo "Using configuration ${CONFIG_FILE}"
-	fi
-else
-	echo "Please add -c <configfile>"
-	exit 1
-fi
-
-if [ ! -f ${CONFIG_FILE} ]; then
-	echo "config file not found!"
-	exit 0
-fi
-source ${CONFIG_FILE}
 
 if [ ! -f ${EXCLUDE_LIST} ]; then
 	echo "exclude file not found!"
@@ -87,10 +86,6 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
-
-date_started=$(date +%Y-%m-%d)
-# allow overwriting date_started
-source ${CONFIG_FILE}
 
 if [ -d "${dest_dir}" ] ; then
 	cd ${dest_dir}
