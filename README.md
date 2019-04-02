@@ -5,6 +5,12 @@ This is an rsync-based backup solution for a large, remote directory tree.
 to all of `--link-dest`. `--delete-delay` or `--delete-after` is needed when
 using `--fuzzy`.
 
+## how to install
+TODO download release
+
+	tar -xf <tarball>
+	sudo make install
+
 ## how to use
 
 	remote2local.sh -c <configfile> [-q] [-r <nr_of_retries>]
@@ -12,6 +18,12 @@ using `--fuzzy`.
 		-q	quiet. print less
 		-r	number of retries until remote is reachable. 0 for inifitely
 		-h	print this help text
+
+## how to uninstall
+TODO download release
+
+	tar -xf <tarball>
+	sudo make uninstall
 
 ## offtopic
 ### ssh server behind any NAT
