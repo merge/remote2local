@@ -106,7 +106,7 @@ function trap_exit()
 	fi
 
 	if [ ! $success -gt 0 ] ; then
-		echo -e "${RED}Error${NC} while running rsync. resetting back..."
+		echo -e "remote2local ${RED}stopped${NC}. resetting back..."
 		rm -rf ${archive_name}-${date_started}
 	fi
 }
