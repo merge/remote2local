@@ -68,11 +68,15 @@ if [ ! -f ${CONFIG_FILE} ]; then
 	exit 1
 fi
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
 date_started=$(date +%Y-%m-%d)
 source ${CONFIG_FILE}
 if [ ! $quiet -gt 0 ] ; then
-	echo "======= remote2local version $version - happy backuping ======"
+	echo -e "${YELLOW}======= remote2local version $version - happy backuping ======${NC}"
 fi
 
 
@@ -81,11 +85,6 @@ if [ ! -f ${EXCLUDE_LIST} ]; then
 	exit 1
 fi
 
-
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
 
 if [ -d "${dest_dir}" ] ; then
 	cd ${dest_dir}
@@ -112,7 +111,7 @@ trap "user_cancel" SIGINT
 function trap_exit()
 {
 	if [ ! $quiet -gt 0 ] ; then
-		echo "-------- stopping $(date) ----------"
+		echo -e "${YELLOW}======== stopping $(date) ==========${NC}"
 	fi
 
 	if [ ! $success -gt 0 ] ; then
