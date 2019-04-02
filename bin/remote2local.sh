@@ -80,14 +80,14 @@ if [ ! $quiet -gt 0 ] ; then
 fi
 
 
-if [ ! -f ${EXCLUDE_LIST} ]; then
+if [ ! -f "${EXCLUDE_LIST}" ]; then
 	echo "exclude file not found: ${EXCLUDE_LIST}"
 	exit 1
 fi
 
 
 if [ -d "${dest_dir}" ] ; then
-	cd ${dest_dir}
+	cd "${dest_dir}"
 else
 	echo "destination directory not found: ${dest_dir}"
 	exit 1
@@ -116,7 +116,7 @@ function trap_exit()
 
 	if [ ! $success -gt 0 ] ; then
 		echo -e "remote2local ${RED}stopped${NC}. resetting back..."
-		rm -rf ${archive_name}-${date_started}
+		rm -rf "${archive_name}"-"${date_started}"
 	fi
 }
 trap "trap_exit" EXIT
@@ -133,7 +133,7 @@ else
 fi
 
 wait_infinitely=0
-if [ $tries -eq 0 ] ; then
+if [ "$tries" -eq 0 ] ; then
 	wait_infinitely=1
 	tries=1
 	if [ ! $quiet -gt 0 ] ; then
@@ -156,32 +156,32 @@ while [ $tries -ne 0 ] ; do
 		 --delete-after \
 		 --fuzzy \
 		 --fuzzy \
-		 $rsync_verbose \
+		 "${rsync_verbose}" \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
-		 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
+		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
 		 --link-dest="${dest_dir}/${archive_name}-last"
 	else
 		rsync -aR \
 		 --delete-after \
 		 --fuzzy \
 		 --fuzzy \
-		 $rsync_verbose \
+		 "${rsync_verbose}" \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
-		 -e ssh ${source_ssh}:${source_dir} ${archive_name}-${date_started} \
+		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
 		 --link-dest="${dest_dir}/${archive_name}-last" 2> /dev/null
 	fi
 	if [ "$?" -eq "0" ] ; then
 		success=1
 		tries=0
 		sync
-		ln -nsf ${archive_name}-${date_started} ${archive_name}-last
+		ln -nsf "${archive_name}"-"${date_started}" "${archive_name}"-last
 		echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
 	else
-		rm -rf ${archive_name}-${date_started}
+		rm -rf "${archive_name}"-"${date_started}"
 		if [ ! $quiet -gt 0 ] ; then
 			echo "$tries retries"
 		else
