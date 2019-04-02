@@ -64,7 +64,7 @@ if [ "$have_config_file" -eq 0 ] ; then
 fi
 
 if [ ! -f ${CONFIG_FILE} ]; then
-	echo "config file ${CONFIG_FILE} not found!"
+	echo "config file not found: ${CONFIG_FILE}"
 	exit 0
 fi
 
@@ -77,7 +77,7 @@ fi
 
 
 if [ ! -f ${EXCLUDE_LIST} ]; then
-	echo "exclude file not found!"
+	echo "exclude file not found: ${EXCLUDE_LIST}"
 	exit 0
 fi
 
@@ -90,7 +90,7 @@ NC='\033[0m' # No Color
 if [ -d "${dest_dir}" ] ; then
 	cd ${dest_dir}
 else
-	echo "destination directory not found!"
+	echo "destination directory not found: ${dest_dir}"
 	exit 0
 fi
 
