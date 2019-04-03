@@ -86,9 +86,7 @@ if [ ! -f "${EXCLUDE_LIST}" ]; then
 fi
 
 
-if [ -d "${dest_dir}" ] ; then
-	cd "${dest_dir}"
-else
+if [ ! -d "${dest_dir}" ] ; then
 	echo "destination directory not found: ${dest_dir}"
 	exit 1
 fi
@@ -150,6 +148,13 @@ while [ $tries -ne 0 ] ; do
 
 	# TODO logfile in /tmp instead of /dev/null
 
+	if [ ! -d "${dest_dir}" ] ; then
+		echo "destination directory is gone: ${dest_dir}"
+		tries=0
+		exit 1
+	fi
+	cd "${dest_dir}"
+
 	date_started=$(date +%Y-%m-%d)
 	if [ ! $quiet -gt 0 ] ; then
 		rsync -aR \
@@ -180,6 +185,7 @@ while [ $tries -ne 0 ] ; do
 		sync
 		ln -nsf "${archive_name}"-"${date_started}" "${archive_name}"-last
 		echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
+		cd - &> /dev/null
 	else
 		rm -rf "${archive_name}"-"${date_started}"
 		if [ ! $quiet -gt 0 ] ; then
@@ -187,6 +193,7 @@ while [ $tries -ne 0 ] ; do
 		else
 			printf "."
 		fi
+		cd - &> /dev/null
 		sleep 60
 	fi
 done
