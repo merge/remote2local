@@ -64,7 +64,7 @@ if [ "$have_config_file" -eq 0 ] ; then
 fi
 
 if [ ! -f ${CONFIG_FILE} ]; then
-	echo "config file not found: ${CONFIG_FILE}"
+	echo -e "${RED}Error:${NC} config file not found: ${CONFIG_FILE}"
 	exit 1
 fi
 
@@ -81,23 +81,23 @@ fi
 
 
 if [ ! -f "${EXCLUDE_LIST}" ]; then
-	echo "exclude file not found: ${EXCLUDE_LIST}"
+	echo -e "${RED}Config Error:${NC} exclude file not found: ${EXCLUDE_LIST}"
 	exit 1
 fi
 
 
 if [ ! -d "${dest_dir}" ] ; then
-	echo "destination directory not found: ${dest_dir}"
+	echo -e "${RED}Error:${NC} destination directory not found: ${dest_dir}"
 	exit 1
 fi
 
 if [ -z "${archive_name}" ] ; then
-	echo "no archive name for local destination"
+	echo -e "${RED}Config Error:${NC} no archive name for local destination"
 	exit 1
 fi
 
 if [ -z "${source_dir}" ] ; then
-	echo "no source directory for remote source"
+	echo -e "${RED}Config Error:${NC} no source directory for remote source"
 	exit 1
 fi
 
