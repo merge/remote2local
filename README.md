@@ -18,6 +18,7 @@ download a release tarball
 		-c	path to config file, see example for the settings
 		-q	quiet. print less
 		-r	number of retries until remote is reachable. 0 for inifitely
+		-v	only open a VNC session to the source machine
 		-h	print this help text
 
 ## how to uninstall
@@ -25,6 +26,14 @@ download a release tarball
 
 	tar -xf <tarball>
 	sudo make uninstall
+
+## requirements
+* remote source: ssh server, rsync
+* local destination: ssh client, rsync
+
+### optional
+* remote source: tor, x11vnc
+* local destination: tor, vncviewer (xtightvncviewer)
 
 ## offtopic
 ### ssh server behind any NAT
@@ -46,7 +55,3 @@ have tor installed and ssh configured:
 		HostName xyz.onion
 		proxyCommand ncat --proxy 127.0.0.1:9050 --proxy-type socks5 %h %p
 
-
-### vnc support session
-`ssh -t -L 5900:localhost:5900 <remote> 'x11vnc -localhost -display :0'`
-`vncviewer -encodings "copyrect tight zrle hextile" localhost:0`

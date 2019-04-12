@@ -10,6 +10,7 @@ have_config_file=0
 success=0
 quiet=0
 tries=1
+vnc=0
 
 function usage() {
 	echo "remote2local v$version"
@@ -21,7 +22,7 @@ function usage() {
 	echo "	-h	print this help text"
 }
 
-args=$(getopt -o c:qr:h -- "$@")
+args=$(getopt -o c:qr:vh -- "$@")
 if [ $? -ne 0 ] ; then
 	exit 1
 fi
@@ -39,6 +40,10 @@ do
 		;;
 	-r)
 		tries=$2
+		shift
+		;;
+	-v)
+		vnc=1
 		shift
 		;;
 	-h)
@@ -66,6 +71,14 @@ fi
 if [ ! -f ${CONFIG_FILE} ]; then
 	echo -e "${RED}Error:${NC} config file not found: ${CONFIG_FILE}"
 	exit 1
+fi
+
+source ${CONFIG_FILE}
+if [ "${vnc}" -gt 0 ] ; then
+	ssh -t -t -L 5900:localhost:5900 ${source_ssh} 'x11vnc -localhost -display :0' &
+	sleep 5
+	vncviewer -encodings "copyrect tight zrle hextile" localhost:0
+	exit 0
 fi
 
 RED='\033[0;31m'
