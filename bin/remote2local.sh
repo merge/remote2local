@@ -161,7 +161,7 @@ while [ $tries -ne 0 ] ; do
 		 --delete-after \
 		 --fuzzy \
 		 --fuzzy \
-		 "${rsync_verbose}" \
+		 ${rsync_verbose} \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
@@ -172,7 +172,7 @@ while [ $tries -ne 0 ] ; do
 		 --delete-after \
 		 --fuzzy \
 		 --fuzzy \
-		 "${rsync_verbose}" \
+		 ${rsync_verbose} \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
