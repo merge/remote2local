@@ -1,12 +1,13 @@
 # rsync backup solution
 This is an rsync-based backup solution for a large, remote directory tree.
-* incremental backup using hardlinks: `--link-dest` pointing to the last backup
-* Recognize renamings: The second `--fuzzy` option should compare a source file
-to all of `--link-dest`. `--delete-delay` or `--delete-after` is needed when
-using `--fuzzy`.
+
+## features
+* history is preserved: incremental (daily) backups (using hardlinks)
+* fast over slow connections (compression; recognize moved files at the remote source)
+* robust error handling (interrupted connection or user errors)
 
 ## how to install
-TODO download release
+download a release tarball
 
 	tar -xf <tarball>
 	sudo make install
@@ -20,7 +21,7 @@ TODO download release
 		-h	print this help text
 
 ## how to uninstall
-TODO download release
+download a release tarball
 
 	tar -xf <tarball>
 	sudo make uninstall
