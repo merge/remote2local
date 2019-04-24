@@ -98,12 +98,6 @@ if [ ! -f "${EXCLUDE_LIST}" ]; then
 	exit 1
 fi
 
-
-if [ ! -d "${dest_dir}" ] ; then
-	echo -e "${RED}Error:${NC} destination directory not found: ${dest_dir}"
-	exit 1
-fi
-
 if [ -z "${archive_name}" ] ; then
 	echo -e "${RED}Config Error:${NC} no archive name for local destination"
 	exit 1
@@ -162,9 +156,14 @@ while [ $tries -ne 0 ] ; do
 	# TODO logfile in /tmp instead of /dev/null
 
 	if [ ! -d "${dest_dir}" ] ; then
-		echo "destination directory is gone: ${dest_dir}"
-		tries=0
-		exit 1
+		if [ ! $quiet -gt 0 ] ; then
+			echo -e "${RED}Error:${NC} destination directory not found: ${dest_dir}"
+			echo "$tries retries"
+		else
+			printf "${RED}.${NC}"
+		fi
+		sleep 60
+		continue
 	fi
 	cd "${dest_dir}"
 
