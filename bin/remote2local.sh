@@ -120,8 +120,13 @@ function trap_exit()
 	fi
 
 	if [ ! $success -gt 0 ] ; then
-		echo -e "remote2local ${RED}stopped${NC}. resetting back..."
-		rm -rf "${archive_name}"-"${date_started}"
+		echo -e "remote2local ${RED}stopped${NC}."
+		if [ -d "${dest_dir}" ] ; then
+			echo "resetting back..."
+			cd "${dest_dir}"
+			rm -rf "${archive_name}"-"${date_started}"
+			cd - &> /dev/null
+		fi
 	fi
 }
 trap "trap_exit" EXIT
