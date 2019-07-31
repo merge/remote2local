@@ -3,7 +3,6 @@
 # Copyright (C) 2019, Martin Kepplinger <martink@posteo.de>
 version="0.1"
 
-# TODO allow resume instead of restart
 # TODO detect backup in progress, and exit early
 
 have_config_file=0
@@ -172,13 +171,13 @@ while [ $tries -ne 0 ] ; do
 	fi
 	cd "${dest_dir}"
 
-	date_started=$(date +%Y-%m-%d)
 	if [ ! $quiet -gt 0 ] ; then
 		rsync -aR \
 		 --delete-after \
 		 --fuzzy \
 		 --fuzzy \
 		 ${rsync_verbose} \
+		 --append-verify \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
@@ -190,6 +189,7 @@ while [ $tries -ne 0 ] ; do
 		 --fuzzy \
 		 --fuzzy \
 		 ${rsync_verbose} \
+		 --append-verify \
 		 --compress --compress-level=9 \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
@@ -204,7 +204,6 @@ while [ $tries -ne 0 ] ; do
 		echo -e "${GREEN}Success.${NC} latest backup is now ${archive_name}-${date_started}"
 		cd - &> /dev/null
 	else
-		rm -rf "${archive_name}"-"${date_started}"
 		if [ ! $quiet -gt 0 ] ; then
 			echo "$tries retries"
 		else
