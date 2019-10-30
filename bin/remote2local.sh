@@ -159,6 +159,17 @@ if [ "$tries" -eq 0 ] ; then
 	fi
 fi
 
+OPTS=""
+OPTS+=" -aR"
+OPTS+=" --delete-after"
+OPTS+=" --fuzzy --fuzzy"
+OPTS+=" ${rsync_verbose}"
+OPTS+=" --append-verify"
+OPTS+=" --compress --compress-level=9"
+OPTS+=" --skip-compress=${RSYNC_SKIP_COMPRESS}"
+OPTS+=" --exclude-from=${EXCLUDE_LIST}"
+OPTS+=" --ignore-missing-args"
+
 while [ $tries -ne 0 ] ; do
 	tries=$(($tries-1))
 
@@ -181,29 +192,11 @@ while [ $tries -ne 0 ] ; do
 	cd "${dest_dir}"
 
 	if [ ! $quiet -gt 0 ] ; then
-		rsync -aR \
-		 --delete-after \
-		 --fuzzy \
-		 --fuzzy \
-		 ${rsync_verbose} \
-		 --append-verify \
-		 --compress --compress-level=9 \
-		 --skip-compress=$RSYNC_SKIP_COMPRESS \
-		 --exclude-from="${EXCLUDE_LIST}" \
-		 --ignore-missing-args \
+		rsync ${OPTS} \
 		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
 		 --link-dest="${dest_dir}/${archive_name}-last"
 	else
-		rsync -aR \
-		 --delete-after \
-		 --fuzzy \
-		 --fuzzy \
-		 ${rsync_verbose} \
-		 --append-verify \
-		 --compress --compress-level=9 \
-		 --skip-compress=$RSYNC_SKIP_COMPRESS \
-		 --exclude-from="${EXCLUDE_LIST}" \
-		 --ignore-missing-args \
+		rsync ${OPTS} \
 		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
 		 --link-dest="${dest_dir}/${archive_name}-last" 2> /dev/null
 	fi
