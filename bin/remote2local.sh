@@ -11,6 +11,15 @@ quiet=0
 tries=1
 vnc=0
 
+RSYNC_SKIP_COMPRESS="3fr/3g2/3gp/3gpp/7z/aac/ace/amr/apk/appx/appxbundle"
+RSYNC_SKIP_COMPRESS+="/arc/arj/arw"
+RSYNC_SKIP_COMPRESS+="/asf/avi/bz2/cab/cr2/crypt[5678]/dat/dcr/deb/dmg/drc/ear"
+RSYNC_SKIP_COMPRESS+="/erf/flac/flv/gif/gpg/gz/iiq/iso/jar/jp2/jpeg/jpg/k25/kdc"
+RSYNC_SKIP_COMPRESS+="/lz/lzma/lzo/m4[apv]/mef/mkv/mos/mov/mp[34]/mpeg"
+RSYNC_SKIP_COMPRESS+="/mp[gv]/msi"
+RSYNC_SKIP_COMPRESS+="/nef/oga/ogg/ogv/opus/orf/pef/png/qt/rar/rpm/rw2/rzip/s7z"
+RSYNC_SKIP_COMPRESS+="/sfx/sr2/srf/svgz/t[gb]z/tlz/txz/vob/wim/wma/wmv/xz/zip"
+
 function usage() {
 	echo "remote2local v$version"
 	echo ""
@@ -179,6 +188,7 @@ while [ $tries -ne 0 ] ; do
 		 ${rsync_verbose} \
 		 --append-verify \
 		 --compress --compress-level=9 \
+		 --skip-compress=$RSYNC_SKIP_COMPRESS \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
 		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
@@ -191,6 +201,7 @@ while [ $tries -ne 0 ] ; do
 		 ${rsync_verbose} \
 		 --append-verify \
 		 --compress --compress-level=9 \
+		 --skip-compress=$RSYNC_SKIP_COMPRESS \
 		 --exclude-from="${EXCLUDE_LIST}" \
 		 --ignore-missing-args \
 		 -e ssh "${source_ssh}":"${source_dir}" "${archive_name}"-"${date_started}" \
