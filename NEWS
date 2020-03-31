@@ -5,3 +5,4 @@ This is an initial release of remote2local. Some features are
 * reliable transfer of a large, changing, remote ssh source (like a home directory)
 * clean exit in case of failure, during transfer or by the user
 * robust error handling
+* supports auto-resuming if interrupted
