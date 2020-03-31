@@ -186,6 +186,7 @@ while [ $tries -ne 0 ] ; do
 	if [ ! -d "${dest_dir}" ] ; then
 		if [ ! $quiet -gt 0 ] ; then
 			echo -e "${RED}Error:${NC} destination directory not found: ${dest_dir}"
+			echo "Please create it if it's the first backup"
 			echo "$tries retries"
 		else
 			printf "${RED}.${NC}"
