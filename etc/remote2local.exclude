@@ -1,6 +1,7 @@
 .Private
 .ecryptfs
 .cache
+.ccache
 .local/share
 .nobackup
 tor-browser_en-US
