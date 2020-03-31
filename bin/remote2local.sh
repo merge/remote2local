@@ -170,6 +170,10 @@ OPTS+=" --skip-compress=${RSYNC_SKIP_COMPRESS}"
 OPTS+=" --exclude-from=${EXCLUDE_LIST}"
 OPTS+=" --ignore-missing-args"
 
+if [ ! $quiet -gt 0 ] ; then
+	echo "rsync options to run: ${OPTS}"
+fi
+
 while [ $tries -ne 0 ] ; do
 	tries=$(($tries-1))
 
