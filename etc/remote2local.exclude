@@ -4,5 +4,6 @@
 .ccache
 .local/share
 .thunderbird
+.vim
 tor-browser_en-US
 .nobackup
