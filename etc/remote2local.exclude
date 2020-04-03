@@ -3,5 +3,6 @@
 .cache
 .ccache
 .local/share
-.nobackup
+.thunderbird
 tor-browser_en-US
+.nobackup
