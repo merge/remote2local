@@ -160,7 +160,8 @@ if [ "$tries" -eq 0 ] ; then
 fi
 
 OPTS=""
-OPTS+=" -aR"
+OPTS+=" -a --no-o --no-g"
+OPTS+=" -R"
 OPTS+=" --delete-after"
 OPTS+=" --fuzzy --fuzzy"
 OPTS+=" ${rsync_verbose}"
