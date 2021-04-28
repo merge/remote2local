@@ -188,7 +188,11 @@ while [ $tries -ne 0 ] ; do
 		if [ ! $quiet -gt 0 ] ; then
 			echo -e "${RED}Error:${NC} destination directory not found: ${dest_dir}"
 			echo "Please create it if it's the first backup"
-			echo "$tries retries"
+			if [ $wait_infinitely -gt 0 ] ; then
+				echo "waiting for successful connection..."
+			else
+				echo "$tries retries"
+			fi
 		else
 			printf "${RED}.${NC}"
 		fi
